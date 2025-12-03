@@ -25,7 +25,16 @@ function showTab(tabName) {
 
     // Show selected tab
     document.getElementById(`${tabName}-section`).classList.add('active');
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        // If called programmatically, find and activate the right button
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            if (btn.textContent.toLowerCase().includes(tabName)) {
+                btn.classList.add('active');
+            }
+        });
+    }
 
     // Load appropriate data
     if (tabName === 'schools') {

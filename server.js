@@ -242,33 +242,38 @@ app.delete('/api/students/:id', (req, res) => {
 // ===========================
 // STATISTICS ENDPOINT
 // ===========================
-app.get('/api/stats', (req, res) => {
-  const stats = {};
-  
-  db.get('SELECT COUNT(*) as count FROM schools', [], (err, row) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    stats.schools = row.count;
-    
-    db.get('SELECT COUNT(*) as count FROM students', [], (err, row) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      stats.students = row.count;
-      
-      db.get('SELECT COUNT(*) as count FROM students WHERE status = "active"', [], (err, row) => {
-        if (err) {
-          res.status(500).json({ error: err.message });
-          return;
-        }
-        stats.active_students = row.count;
-        res.json(stats);
-      });
+app.get('/api/stats', async (req, res) => {
+  try {
+    // Execute all queries in parallel using Promise.all
+    const [schoolsResult, studentsResult, activeStudentsResult] = await Promise.all([
+      new Promise((resolve, reject) => {
+        db.get('SELECT COUNT(*) as count FROM schools', [], (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        });
+      }),
+      new Promise((resolve, reject) => {
+        db.get('SELECT COUNT(*) as count FROM students', [], (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        });
+      }),
+      new Promise((resolve, reject) => {
+        db.get('SELECT COUNT(*) as count FROM students WHERE status = "active"', [], (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        });
+      })
+    ]);
+
+    res.json({
+      schools: schoolsResult.count,
+      students: studentsResult.count,
+      active_students: activeStudentsResult.count
     });
-  });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Root endpoint
