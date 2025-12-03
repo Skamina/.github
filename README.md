@@ -230,10 +230,11 @@ Response: {
 
 ## Security Considerations
 
-- Input validation on both client and server side
-- SQL injection prevention through parameterized queries
-- XSS protection through HTML escaping
-- CORS enabled for API access
+- **Rate Limiting**: API endpoints are protected with rate limiting (100 requests per 15 minutes per IP)
+- **Input Validation**: Both client and server-side validation of user inputs
+- **SQL Injection Prevention**: Parameterized queries used for all database operations
+- **XSS Protection**: HTML escaping in frontend to prevent cross-site scripting
+- **CORS**: Cross-Origin Resource Sharing enabled for controlled API access
 
 ## Future Enhancements
 
