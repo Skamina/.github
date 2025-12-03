@@ -20,7 +20,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use('/api/', limiter); // Apply rate limiting to all API routes
+app.use('/api', limiter); // Apply rate limiting to all API routes
 
 // ===========================
 // SCHOOLS API ENDPOINTS

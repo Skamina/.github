@@ -14,7 +14,7 @@ async function loadStats() {
 }
 
 // Tab switching
-function showTab(tabName) {
+function showTab(tabName, evt) {
     // Hide all tabs
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
@@ -25,8 +25,8 @@ function showTab(tabName) {
 
     // Show selected tab
     document.getElementById(`${tabName}-section`).classList.add('active');
-    if (event && event.target) {
-        event.target.classList.add('active');
+    if (evt && evt.target) {
+        evt.target.classList.add('active');
     } else {
         // If called programmatically, find and activate the right button
         document.querySelectorAll('.tab-button').forEach(btn => {
